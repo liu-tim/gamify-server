@@ -7,6 +7,25 @@ $(function() {
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
 
+  $("#button").click( function()
+          {
+            var message = "234234";
+            // Prevent markup from being injected into the message
+            message = cleanInput(message);
+            // if there is a non-empty message and a socket connection
+            if (message && connected) {
+              $inputMessage.val('');
+              addChatMessage({
+                username: username,
+                message: message
+              });
+              // tell server to execute 'new message' and send along one parameter
+              socket.emit('click button', username);
+            }
+             $('#button').attr('disabled','disabled').css('background-color', green);
+          }
+     )
+
   // Initialize variables
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
@@ -88,7 +107,7 @@ $(function() {
       .text(data.username)
       .css('color', getUsernameColor(data.username));
     var $messageBodyDiv = $('<span class="messageBody">')
-      .text(data.message);
+      .text(data.message).text("SWAG " + data.username);
 
     var typingClass = data.typing ? 'typing' : '';
     var $messageDiv = $('<li class="message"/>')
@@ -224,7 +243,13 @@ $(function() {
   });
 
   // Socket events
+  socket.on('button clicked', function (data) {
+    $('#button').attr('disabled','disabled').css('background-color', '#666666');
+  });
 
+  socket.on('clear', function (data) {
+    $('#button').removeAttr('disabled').css('background-color', '#669966');
+  });
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
