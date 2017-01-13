@@ -22,7 +22,7 @@ $(function() {
               // tell server to execute 'new message' and send along one parameter
               socket.emit('click button', username);
             }
-             $('#button').attr('disabled','disabled').css('background-color', green);
+             $('#button').attr('disabled','disabled').removeAttr('background-image').css('background-image', 'url(http://i.imgur.com/n98w2Fy.png)');
           }
      )
 
@@ -244,11 +244,11 @@ $(function() {
 
   // Socket events
   socket.on('button clicked', function (data) {
-    $('#button').attr('disabled','disabled').css('background-color', '#666666');
+    $('#button').attr('disabled','disabled').css('background-image', 'url(http://www.reactionface.info/sites/default/files/imagecache/Node_Page/images/feels-bad-man.jpg)');
   });
 
   socket.on('clear', function (data) {
-    $('#button').removeAttr('disabled').css('background-color', '#669966');
+    $('#button').removeAttr('disabled').removeAttr('background-image').css('background-color', '#669966');
   });
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
