@@ -15,14 +15,14 @@ $(function() {
             // if there is a non-empty message and a socket connection
             if (message && connected) {
               $inputMessage.val('');
-              addChatMessage({
-                username: username,
-                message: message
-              });
+              // addChatMessage({
+              //   username: username,
+              //   message: message
+              // });
               // tell server to execute 'new message' and send along one parameter
               socket.emit('click button', username);
             }
-             $('#button').attr('disabled','disabled').removeAttr('background-image').css('background-image', 'url(http://i.imgur.com/n98w2Fy.png)');
+             $('#button').attr('disabled','disabled').css('background-color', 'green');
           }
      )
 
@@ -51,7 +51,7 @@ $(function() {
     } else {
       message += "there are " + data.numUsers + " participants";
     }
-    log(message);
+    // log(message);
   }
 
   // Sets the client's username
@@ -78,20 +78,20 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        message: message
-      });
+      // addChatMessage({
+      //   username: username,
+      //   message: message
+      // });
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
     }
   }
 
   // Log a message
-  function log (message, options) {
-    var $el = $('<li>').addClass('log').text(message);
-    addMessageElement($el, options);
-  }
+  // function log (message, options) {
+  //   var $el = $('<li>').addclass('log').text(message);
+  //   addmessageelement($el, options);
+  // }
 
   // Adds the visual chat message to the message list
   function addChatMessage (data, options) {
@@ -122,7 +122,7 @@ $(function() {
   function addChatTyping (data) {
     data.typing = true;
     data.message = 'is typing';
-    addChatMessage(data);
+    // addChatMessage(data);
   }
 
   // Removes the visual chat typing message
@@ -244,37 +244,37 @@ $(function() {
 
   // Socket events
   socket.on('button clicked', function (data) {
-    $('#button').attr('disabled','disabled').css('background-image', 'url(http://www.reactionface.info/sites/default/files/imagecache/Node_Page/images/feels-bad-man.jpg)');
+    $('#button').attr('disabled','disabled').css('background-color', '#666666');
   });
 
   socket.on('clear', function (data) {
-    $('#button').removeAttr('disabled').removeAttr('background-image').css('background-color', '#669966');
+    $('#button').removeAttr('disabled').css('background-color', '#669966');
   });
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
     var message = "Welcome to Socket.IO Chat – ";
-    log(message, {
-      prepend: true
-    });
+    // log(message, {
+    //   prepend: true
+    // });
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-    addChatMessage(data);
+    // addChatMessage(data);
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
-    log(data.username + ' joined');
+    // log(data.username + ' joined');
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', function (data) {
-    log(data.username + ' left');
+    // log(data.username + ' left');
     addParticipantsMessage(data);
     removeChatTyping(data);
   });
@@ -290,18 +290,18 @@ $(function() {
   });
 
   socket.on('disconnect', function () {
-    log('you have been disconnected');
+    // log('you have been disconnected');
   });
 
   socket.on('reconnect', function () {
-    log('you have been reconnected');
+    // log('you have been reconnected');
     if (username) {
       socket.emit('add user', username);
     }
   });
 
   socket.on('reconnect_error', function () {
-    log('attempt to reconnect has failed');
+    // log('attempt to reconnect has failed');
   });
 
 });

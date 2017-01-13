@@ -15,40 +15,50 @@ app.use(express.static(__dirname + '/public'));
 // Chatroom
 
 var numUsers = 0;
+var isBuzzed = false;
 
 io.on('connection', function (socket) {
   var addedUser = false;
 
-  socket.on('create room', function (data) {
-    // we tell the client to execute 'new message'
-    socket.emit('room created', {
-      roomId: '100'
+  socket.on('allow answer', function (data) {
+    socket.broadcast.emit('allowed answer', {
+      allowAnswer: data
     });
-    socket.gameName = data;
   });
 
   socket.on('click button', function (data) {
-    // we tell the client to execute 'new message'
+    if (isBuzzed) {
+      return;
+    }
+    isBuzzed = true;
+
+
+    // tell you that you clicked
+    socket.emit('button clicked', {
+      username: data
+    });
+    console.log(data);
+    // tell everyone else that there was a click
     socket.broadcast.emit('button clicked', {
       username: data
     });
   });
 
-  socket.on('clear', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('clear', {
-      isCorrect: data
-    });
-  });
 
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data
-    });
-    console.log(data)
+  socket.on('clear', function (data) {
+    isBuzzed = false;
+    console.log('clear', data);
+    if (data.isCorrect) {
+      // console.log('correct', data);
+      socket.broadcast.emit('answer is correct', {
+        username: data.username
+      });
+    } else {
+      socket.broadcast.emit('answer is wrong', {
+        username: data.username
+      });
+    }
+    socket.broadcast.emit('cleared');
   });
 
   // when the client emits 'add user', this listens and executes
@@ -56,31 +66,20 @@ io.on('connection', function (socket) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
-    socket.username = username;
+    socket.user = {
+      username: username,
+      score: 0
+    };
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      isBuzzed: isBuzzed
     });
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
-      username: socket.username,
+      user: socket.user,
       numUsers: numUsers
-    });
-    console.log(socket.username)
-  });
-
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', function () {
-    socket.broadcast.emit('typing', {
-      username: socket.username
-    });
-  });
-
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', function () {
-    socket.broadcast.emit('stop typing', {
-      username: socket.username
     });
   });
 
@@ -91,7 +90,7 @@ io.on('connection', function (socket) {
 
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
-        username: socket.username,
+        user: socket.user,
         numUsers: numUsers
       });
     }
