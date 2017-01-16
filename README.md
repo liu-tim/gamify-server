@@ -27,13 +27,14 @@ $ npm install
 ```
 $ node index.js 
 ```
-The app will be listening to port 3000: [http://localhost:3000/](http://localhost:3080/)
+The app will be listening to port 3000: [http://localhost:3000/](http://localhost:3000/)
 
 ### 4. Accessing the game room
-Determine the server's network IP address ``` ifconfig``` on UNIX systems or ``` ipconfig ``` on Windows and record the IP address entry.
+Determine and record the server's network IP address using ``` ifconfig``` on UNIX systems or ``` ipconfig ``` on Windows.
 
-Players can then navigate to [http://\&lt;serveripaddresss&gt;:3000/](http://localhost:3080/) on your internet browser on mobile or desktop to join the game room. Enter the player name and wait for on-screen and game moderator instructions. 
+Players can then join the game room by navigating to [http://&lt;server IP address&gt;:3000/](http://localhost:3000/) using an internet browser on mobile or desktop. 
+
+Once in the game room, enter the player name and wait for instructions from the game moderator. 
 
 ## Android App
-[Gamify-Android](https://github.com/benjaminlo/Gamify-Android) is an Android application for moderating cross-platform multiplayer games that complements this server. 
-
+[Gamify-Android](https://github.com/benjaminlo/Gamify-Android) is the Android application that complements this server. It acts as the game moderator for the real-time multiplayer Gamify games.
